@@ -18,13 +18,13 @@ use sync::{
 };
 
 #[derive(Debug)]
-pub struct RuslinData {
+pub struct NoteslabData {
     pub db: Arc<Database>,
     pub sync_config: RwLock<Option<SyncConfig>>,
     pub resource_dir: PathBuf,
 }
 
-impl RuslinData {
+impl NoteslabData {
     pub fn new(data_dir: &Path, resource_dir: &Path) -> SyncResult<Self> {
         fs::create_dir_all(resource_dir)?;
         let db = Arc::new(Database::new(data_dir, resource_dir)?);
