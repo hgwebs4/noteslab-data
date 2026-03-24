@@ -1,6 +1,6 @@
-use ruslin_data::sync::SyncConfig;
-use ruslin_data::sync::{remote_api::joplin_server_api::test_api::TestSyncClient, SyncResult};
-use ruslin_data::{Folder, Note, Resource, RuslinData, UpdateSource};
+use noteslab_data::sync::SyncConfig;
+use noteslab_data::sync::{remote_api::joplin_server_api::test_api::TestSyncClient, SyncResult};
+use noteslab_data::{Folder, Note, Resource, RuslinData, UpdateSource};
 
 use std::fs::File;
 use std::io::Write;
@@ -22,10 +22,10 @@ impl TestClient {
     async fn new(sync_config: SyncConfig) -> SyncResult<Self> {
         let data_dir = tempfile::TempDir::new().unwrap();
         let resource_dir = tempfile::TempDir::new().unwrap();
-        let ruslin_data = RuslinData::new(data_dir.path(), resource_dir.path())?;
-        ruslin_data.save_sync_config(sync_config).await?;
-        // ruslin_data.clear_remote().await?;
-        Ok(Self(data_dir, resource_dir, ruslin_data))
+        let noteslab_data = RuslinData::new(data_dir.path(), resource_dir.path())?;
+        noteslab_data.save_sync_config(sync_config).await?;
+        // noteslab_data.clear_remote().await?;
+        Ok(Self(data_dir, resource_dir, noteslab_data))
     }
 }
 

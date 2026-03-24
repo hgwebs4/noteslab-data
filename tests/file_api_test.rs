@@ -1,6 +1,6 @@
 use std::ops::Deref;
 
-use ruslin_data::{
+use noteslab_data::{
     sync::{FileApi, FileApiDriverLocal, SyncResult},
     DateTimeTimestamp,
 };

@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use database_test::TestDatabase;
-use ruslin_data::sync::{
+use noteslab_data::sync::{
     remote_api::joplin_server_api::test_api::TestSyncClient, FileApiDriverJoplinServer,
     Synchronizer,
 };

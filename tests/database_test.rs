@@ -1,4 +1,4 @@
-use ruslin_data::{Database, DatabaseResult, Folder, Note, SearchBodyOption, Tag, UpdateSource};
+use noteslab_data::{Database, DatabaseResult, Folder, Note, SearchBodyOption, Tag, UpdateSource};
 use std::{ops::Deref, time::Duration};
 use tempfile::TempDir;
 
