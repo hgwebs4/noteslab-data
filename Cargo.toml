@@ -1,7 +1,7 @@
 [package]
 name = "noteslab-data"
 version = "0.1.0-alpha.1"
-edition = "2024"
+edition = "2021"
 license = "GPL-3.0"
 description = "A simple notes application that supports syncing notes using a self-hosted Joplin server."
 homepage = "https://github.com/hgwebs4/noteslab-data"
