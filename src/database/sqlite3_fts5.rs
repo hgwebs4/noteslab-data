@@ -9,8 +9,11 @@ use std::{
 
 use diesel::sqlite::SqliteConnection;
 // use diesel::result::Error
-use diesel::libsqlite3_sys as ffi;
+use libsqlite3_sys as ffi;
+
 use ffi::{SQLITE_ERROR, SQLITE_OK};
+
+use rusqlite::Connection;
 
 pub struct SqliteError;
 
@@ -77,8 +80,7 @@ unsafe extern "C" fn c_xcreate<T: Tokenizer>(
         .collect::<Vec<_>>();
     let res = catch_unwind(AssertUnwindSafe(move || T::new(global, args)));
     match res {
-        Ok(Ok(v)) => {
-            let bp = Box::into_raw(Box::new(v));
+        Ok(Ok(v)) => {                                                                                                                                                                                                                                                                                               let bp = Box::into_raw(Box::new(v));
             *out_tok = bp.cast::<ffi::Fts5Tokenizer>();
             SQLITE_OK
         }
@@ -108,7 +110,6 @@ unsafe extern "C" fn c_xdelete<T: Tokenizer>(v: *mut ffi::Fts5Tokenizer) {
         }
     }
 }
-
 unsafe extern "C" fn c_xdestroy<T: Tokenizer>(v: *mut c_void) {
     let b = Box::from_raw(v.cast::<T::Global>());
     match catch_unwind(AssertUnwindSafe(move || std::mem::drop(b))) {
@@ -175,8 +176,8 @@ unsafe extern "C" fn c_xtokenize<T: Tokenizer>(
             } else {
                 todo!()
                 // Err(rusqlite::Error::SqliteFailure(
-                // 	rusqlite::ffi::Error::new(res),
-                // 	None,
+                //      rusqlite::ffi::Error::new(res),
+                //      None,
                 // ))
             }
         };
@@ -199,20 +200,18 @@ unsafe extern "C" fn c_xtokenize<T: Tokenizer>(
 fn panic_err_to_str(msg: &Box<dyn std::any::Any + Send>) -> &str {
     if let Some(msg) = msg.downcast_ref::<String>() {
         msg.as_str()
-    } else if let Some(msg) = msg.downcast_ref::<&'static str>() {
-        msg
+    } else if let Some(msg) = msg.downcast_ref::<&'static str>() {                                                                                                                                                                                                                                               msg
     } else {
         "<non-string panic reason>"
     }
 }
-
 pub fn register_tokenizer<T: Tokenizer>(
-    conn: &mut SqliteConnection,
+    conn: &Connection,
     global_data: T::Global,
     name: &str,
 ) -> Result<(), String> {
     unsafe {
-        let dbp = conn.get_raw_conn();
+        let dbp = conn.handle();
         let mut api: *mut ffi::fts5_api = std::ptr::null_mut();
         let mut stmt: *mut ffi::sqlite3_stmt = std::ptr::null_mut();
 

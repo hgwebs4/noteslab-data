@@ -7,6 +7,8 @@ use crate::database::sqlite3_fts5::register_tokenizer;
 
 use super::jieba_tokenizer::JiebaTokenizer;
 
+use rusqlite::Connection;
+
 #[derive(Debug)]
 pub struct ConnectionOptions {
     pub busy_timeout: Option<Duration>,
@@ -16,7 +18,10 @@ impl ConnectionOptions {
     pub fn apply(&self, conn: &mut SqliteConnection) -> QueryResult<()> {
         conn.batch_execute("PRAGMA foreign_keys = ON;")?;
 
-        register_tokenizer::<JiebaTokenizer>(conn, (), "jieba").expect("register tokenizer failed");
+   let database_url = std::env::var("DATABASE_URL").unwrap();
+let rconn = Connection::open(&database_url).unwrap();
+
+     register_tokenizer::<JiebaTokenizer>(&rconn, (), "jieba").expect("register tokenizer failed");
 
         if let Some(duration) = self.busy_timeout {
             conn.batch_execute(&format!(
@@ -41,5 +46,4 @@ impl diesel::r2d2::CustomizeConnection<SqliteConnection, diesel::r2d2::Error>
 {
     fn on_acquire(&self, conn: &mut SqliteConnection) -> Result<(), diesel::r2d2::Error> {
         self.apply(conn).map_err(diesel::r2d2::Error::QueryError)
-    }
-}
+    }                                                                                                                               }                                                                                                                                   
